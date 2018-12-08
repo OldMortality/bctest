@@ -6,13 +6,12 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.openqa.selenium.support.ui.Select;
 
 public class TestAll {
 
@@ -184,7 +183,107 @@ public class TestAll {
 
 	}
 
+	/*
+	 * gets the index as displayed on the web interface
+	 * 
+	 * These methods tell you where a value is found on the select list. So for eth,
+	 * value "eur" is the second option in the select. The index starts at zero for
+	 * the top row.
+	 * 
+	 * 
+	 */
+	public static int getWebIndexEth(String eth) {
+		int result = -1;
 
+		if (eth.equals("mao")) {
+			result = 0;
+		}
+		if (eth.equals("eur")) {
+			result = 1;
+		}
+
+		return result;
+	}
+
+	// these are in reverse on the screen
+	public static int getWebIndexAge1(String age1) {
+		int result = 0;
+
+		if (age1.equals("1")) {
+			result = 2;
+		}
+		if (age1.equals("2")) {
+			result = 1;
+		}
+		if (age1.equals("3")) {
+			result = 0;
+		}
+		return result;
+	}
+
+	// age of menopause
+	public static int getWebIndexAge2(String age2) {
+		int result = 0;
+
+		// 50+
+		if (age2.equals("1")) {
+			result = 3; // bottom of the list
+		}
+		// 45-49
+		if (age2.equals("2")) {
+			result = 2;
+		}
+		// < 45
+		if (age2.equals("3")) {
+			result = 1;
+		}
+		// pre-menopause
+		if (age2.equals("4")) {
+			result = 0; // top of the list
+		}
+		return result;
+	}
+
+	// parity
+	public static int getWebIndexParity(String parity) {
+		int result = -1;
+		if (parity.equals("0"))
+			result = 0;
+		if (parity.equals("1"))
+			result = 1;
+		if (parity.equals("2"))
+			result = 2;
+		if (parity.equals("3"))
+			result = 3;
+		if (parity.equals("4"))
+			result = 4;
+		return (result);
+	}
+
+	// no yes variables
+	public static int getWebIndexNoYes(String ny) {
+		int result = -1;
+		if (ny.equals("0"))
+			result = 0;
+		if (ny.equals("1"))
+			result = 1;
+		return (result);
+	}
+
+	// no yes variables
+	public static int getWebIndexHbcan(String hb) {
+		int result = -1;
+		// no
+		if (hb.equals("0"))
+			result = 0;
+		// 2nd degree
+		if (hb.equals("1"))
+			result = 1;
+		// 1st degree
+		if (hb.equals("2"))
+			result = 2;
+		return (result);
+	}
 
 	public static boolean testOne(String url, WebDriver driver, String _eth, String _age1, String _age2, String _par,
 			String _con, String _hbcan, String _hbben, String _htdis, String _age, String _rr) {
@@ -194,79 +293,42 @@ public class TestAll {
 
 		driver.get(url);
 
-		
+		Select eth = new Select(driver.findElement(By.id("eth")));
+		Select age1 = new Select(driver.findElement(By.id("age1")));
+		Select age2 = new Select(driver.findElement(By.id("age2")));
+		Select par = new Select(driver.findElement(By.id("par")));
+		Select con = new Select(driver.findElement(By.id("con")));
 
-		
+		Select hbcan = new Select(driver.findElement(By.id("hbcan")));
+		Select hbben = new Select(driver.findElement(By.id("hbben")));
+		Select htdis = new Select(driver.findElement(By.id("htdis")));
+		Select age = new Select(driver.findElement(By.id("age")));
+
 		// agree with the disclaimer
-		WebElement toc = driver.findElement(By.id("tocbutton"));
+		WebElement toc = driver.findElement(By.id("toc"));
 		toc.click();
-		// wait for the 'calculate risk' button to appear
+		// wait for the button to appear
 		WebDriverWait wait1 = new WebDriverWait(driver, 35);
 
-		WebElement button = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.id("calcbutton")));
+		WebElement button = wait1.until(ExpectedConditions.visibilityOfElementLocated(By.id("button")));
 
-		
-		driver.findElement(By.id("age")).clear();
-		driver.findElement(By.id("age")).sendKeys(_age); 
-		driver.findElement(By.id("age")).sendKeys(Keys.ENTER);
-		
-		
-		if (_eth.equals("eur")) {
-			driver.findElement(By.id("eurradio")).click();
-		} else {
-			driver.findElement(By.id("maoradio")).click();
-		}
-		
-		if (_age1.equals("1")) {
-			driver.findElement(By.id("age1_1")).click();
-		} else {
-			if (_age1.equals("2")) {
-				driver.findElement(By.id("age1_2")).click();
-			} else {
-				if (_age1.equals("3")) {
-					driver.findElement(By.id("age1_3")).click();
-				}	
-			}
-		}
-		
-		switch(new Integer(_age2)) {
-			case 1:	driver.findElement(By.id("age2_1")).click(); break;
-			case 2:	driver.findElement(By.id("age2_2")).click(); break;
-			case 3:	driver.findElement(By.id("age2_3")).click(); break;
-			case 4:	driver.findElement(By.id("age2_4")).click(); break;
-		}
-		
-		switch(new Integer(_par)) {
-			case 0:	driver.findElement(By.id("par_0")).click(); break;
-			case 1:	driver.findElement(By.id("par_1")).click(); break;
-			case 2:	driver.findElement(By.id("par_2")).click(); break;
-			case 3:	driver.findElement(By.id("par_3")).click(); break;
-			case 4:	driver.findElement(By.id("par_4")).click(); break;
-		}
-		
-		switch(new Integer(_con)) {
-			case 0:	driver.findElement(By.id("con_0")).click(); break;
-			case 1:	driver.findElement(By.id("con_1")).click(); break;
-		}
-		
-		switch(new Integer(_hbcan)) {
-			case 0:	driver.findElement(By.id("hbcan_0")).click(); break;
-			case 1:	driver.findElement(By.id("hbcan_1")).click(); break;
-			case 2:	driver.findElement(By.id("hbcan_2")).click(); break;
-		}
-		
-		switch(new Integer(_hbben)) {
-			case 0:	driver.findElement(By.id("hbben_0")).click(); break;
-			case 1:	driver.findElement(By.id("hbben_1")).click(); break;
-		}
-		
-		switch(new Integer(_htdis)) {
-			case 0:	driver.findElement(By.id("htdis_0")).click(); break;
-			case 1:	driver.findElement(By.id("htdis_1")).click(); break;
-		}
-		
-		
-		
+		// WebElement button = driver.findElement(By.id("button"));
+
+		int webEth = getWebIndexEth(_eth);
+		// System.out.println("Ethnicity " + webEth);
+		eth.selectByIndex(webEth);
+
+		// age1.selectByVisibleText(getVisibleText("age1", _age1));
+		age1.selectByIndex(getWebIndexAge1(_age1));
+
+		age2.selectByIndex(getWebIndexAge2(_age2));
+		par.selectByIndex(getWebIndexParity(_par));
+		con.selectByIndex(getWebIndexNoYes(_con));
+		hbcan.selectByIndex(getWebIndexHbcan(_hbcan));
+		hbben.selectByIndex(getWebIndexNoYes(_hbben));
+		htdis.selectByIndex(getWebIndexNoYes(_htdis));
+		age.selectByVisibleText(getVisibleText("age", _age));
+
 		boolean ok = false;
 		if ((_age2.equals("2") && new Integer(_age) < 45) || (_age2.equals("1") && new Integer(_age) < 50)) {
 
@@ -275,13 +337,13 @@ public class TestAll {
 			WebDriverWait waiterr = new WebDriverWait(driver, 35);
 
 			// wait until description is visible
-			WebElement ageText = waiterr.until(ExpectedConditions.visibilityOfElementLocated(By.id("messageArea")));
+			WebElement ageText = waiterr.until(ExpectedConditions.visibilityOfElementLocated(By.id("ageText")));
 
 			String errMsg = ageText.getAttribute("value");
 
-			System.out.println("====ersMsg====" + errMsg);
+			System.out.println("ersMsg" + errMsg);
 
-			if ("Age at menopause is inconsistent with current age".equals(errMsg)) {
+			if ("Age at menopause is inconsistent with current age.".equals(errMsg)) {
 				ok = true;
 			} else {
 				ok = false;
@@ -388,10 +450,10 @@ public class TestAll {
 
 		//String url = "http://soblinux01.otago.ac.nz:8090/bcclient/calculator.html";
 		
-		String url = "http://localhost:5389/bcclient/client.html";
+		String url = "http://localhost:5389/bcclient/calculator.html";
 
 		// -1 will run all tests. testAll(4,driver,fname) will just run line 4
-		testAll(url, -1, driver, fname);
+		testAll(url, -4, driver, fname);
 		driver.close();
 		System.out.println("done");
 
